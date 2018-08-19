@@ -23,12 +23,16 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Center(
-        child: new RaisedButton(
+        child: new FlatButton(
           child: const Text('Sign in'),
+          color: Colors.blue,
+          textColor: Colors.white,
           onPressed: () {
             _signIn()
             .then((user) => print("signed in " + user.displayName))
-            .catchError((e) => print(e));
+            .catchError((e) => Scaffold.of(context).showSnackBar(new SnackBar(
+              content: new Text(e.toString()),
+            )));
           },
         )
       )
