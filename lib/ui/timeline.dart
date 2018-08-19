@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sampleboard/ui/input.dart';
 
 class TimelineScreen extends StatefulWidget {
   @override
@@ -28,7 +29,15 @@ class _TimelineScreenState extends State<TimelineScreen> {
             }).toList()
           );
         },
-      )
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: new Icon(Icons.edit),
+        onPressed: () {
+          Navigator.push(context, new MaterialPageRoute(
+            builder: (context) => new InputScreen()
+          ));
+        },
+      ),
     );
   }
 
