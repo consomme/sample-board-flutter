@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sampleboard/ui/timeline.dart';
 
 class AuthScreen extends StatefulWidget {
 
@@ -29,7 +30,12 @@ class _AuthScreenState extends State<AuthScreen> {
           textColor: Colors.white,
           onPressed: () {
             _signIn()
-            .then((user) => print("signed in " + user.displayName))
+            .then((user) {
+              print("signed in " + user.displayName);
+              Navigator.push(context, new MaterialPageRoute(
+                builder: (context) => new TimelineScreen()
+              ));
+            })
             .catchError((e) => Scaffold.of(context).showSnackBar(new SnackBar(
               content: new Text(e.toString()),
             )));
