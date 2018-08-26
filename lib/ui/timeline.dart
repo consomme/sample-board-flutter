@@ -22,18 +22,21 @@ class _TimelineScreenState extends State<TimelineScreen> {
           if (!snapshot.hasData) return new Text('Loading...');
           return new ListView(
             children: snapshot.data.documents.map((DocumentSnapshot document) {
-              return Card(
-                child: new Column(
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 120.0,
-                      child: Image.network(document['image']),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: new Text(document['body']),
-                    )
-                  ],
+              return Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: new Column(
+                    children: <Widget>[
+                      new Image.network(
+                        document['image'], 
+                        fit: BoxFit.fitWidth,
+                      ),
+                      new Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: new Text(document['body']),
+                      )
+                    ],
+                  ),
                 ),
               );
             }).toList()

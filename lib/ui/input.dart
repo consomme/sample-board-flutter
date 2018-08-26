@@ -31,7 +31,7 @@ class _InputScreenState extends State<InputScreen> {
       'body': body,
       'image': imageUrl == null ? null : imageUrl.toString(),
       'order': -time
-    });
+    }).then((_) => Navigator.pop(context));
   }
 
   Future _getImage() async {
@@ -66,7 +66,7 @@ class _InputScreenState extends State<InputScreen> {
               constraints: const BoxConstraints(minWidth: double.infinity),
               child: new RaisedButton(
                   padding: const EdgeInsets.all(16.0),
-                  color: Colors.blue,
+                  color: Colors.green,
                   textColor: Colors.white,
                   child: new Text(
                     'Select image',
