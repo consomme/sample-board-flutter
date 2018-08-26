@@ -13,12 +13,11 @@ class InputScreen extends StatefulWidget {
 }
 
 class _InputScreenState extends State<InputScreen> {
-  final titleController = new TextEditingController();
-  final authorController = new TextEditingController();
+  final bodyController = new TextEditingController();
 
   File _image;
 
-  Future<void> _send(String title, String author) async {
+  Future<void> _send(String body) async {
     Uri imageUrl;
     int time = DateTime.now().millisecondsSinceEpoch;
     String uuid = Uuid().v4();
@@ -29,9 +28,8 @@ class _InputScreenState extends State<InputScreen> {
     }
 
     Firestore.instance.collection('posts').document().setData({
-      'title': title,
-      'author': author,
-      'image': imageUrl.toString(),
+      'body': body,
+      'image': imageUrl == null ? null : imageUrl.toString(),
       'order': -time
     });
   }
@@ -46,8 +44,7 @@ class _InputScreenState extends State<InputScreen> {
 
   @override
   void dispose() {
-    titleController.dispose();
-    authorController.dispose();
+    bodyController.dispose();
     super.dispose();
   }
 
@@ -72,24 +69,16 @@ class _InputScreenState extends State<InputScreen> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   child: new Text(
-                    'Confirm',
+                    'Select image',
                     style: new TextStyle(fontSize: 16.0),
                   ),
                   onPressed: () => _getImage())),
           const SizedBox(height: 24.0),
           new TextField(
-            controller: titleController,
+            controller: bodyController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
-              labelText: 'Title',
-            ),
-          ),
-          const SizedBox(height: 24.0),
-          new TextField(
-            controller: authorController,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              labelText: 'Author',
+              labelText: 'Body',
             ),
           ),
           const SizedBox(height: 24.0),
@@ -104,7 +93,7 @@ class _InputScreenState extends State<InputScreen> {
                     style: new TextStyle(fontSize: 16.0),
                   ),
                   onPressed: () =>
-                      _send(titleController.text, authorController.text)))
+                      _send(bodyController.text)))
         ],
       ),
     );
