@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class InputScreen extends StatefulWidget {
   @override
@@ -17,9 +19,20 @@ class _InputScreenState extends State<InputScreen> {
   File _image;
 
   Future<void> _send(String title, String author) async {
+    Uri imageUrl;
+    int time = DateTime.now().millisecondsSinceEpoch;
+    String uuid = Uuid().v4();
+
+    if(_image != null) {
+      StorageUploadTask uploadTask = FirebaseStorage.instance.ref().child('image').child(uuid + '-' + time.toString()).putFile(_image);
+      imageUrl = (await uploadTask.future).downloadUrl;
+    }
+
     Firestore.instance.collection('posts').document().setData({
       'title': title,
       'author': author,
+      'image': imageUrl.toString(),
+      'order': -time
     });
   }
 
