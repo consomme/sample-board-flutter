@@ -17,7 +17,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         title: new Text("timeline"),
       ),
       body: new StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('posts').snapshots(),
+        stream: Firestore.instance.collection('posts').orderBy('order').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) return new Text('Loading...');
           return new ListView(
