@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sampleboard/ui/input.dart';
 
@@ -41,8 +42,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 child: Card(
                   child: new Column(
                     children: <Widget>[
-                      new Image.network(
-                        document['image'], 
+                      new CachedNetworkImage(
+                        imageUrl: document['image'],
+                        placeholder: new CircularProgressIndicator(),
+                        errorWidget: new Icon(Icons.error),
                         fit: BoxFit.fitWidth,
                       ),
                       new Container(
