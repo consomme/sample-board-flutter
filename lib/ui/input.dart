@@ -30,7 +30,8 @@ class _InputScreenState extends State<InputScreen> {
     Firestore.instance.collection('posts').document().setData({
       'body': body,
       'image': imageUrl == null ? null : imageUrl.toString(),
-      'order': -time
+      'order': -time,
+      'favorite': 0
     }).then((_) => Navigator.pop(context));
   }
 

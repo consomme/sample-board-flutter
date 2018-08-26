@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +11,18 @@ class TimelineScreen extends StatefulWidget {
 }
 
 class _TimelineScreenState extends State<TimelineScreen> {
+
+  Future _favorite(String id) async {
+    final TransactionHandler transaction = (Transaction tx) async {
+      final DocumentSnapshot snapshot = await tx.get(Firestore.instance.collection('posts').document(id));
+
+      int favorite = snapshot.data['favorite'];
+      snapshot.data['favorite'] = favorite + 1;
+      await tx.update(snapshot.reference, snapshot.data);
+    };
+
+    Firestore.instance.runTransaction(transaction);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +45,33 @@ class _TimelineScreenState extends State<TimelineScreen> {
                         document['image'], 
                         fit: BoxFit.fitWidth,
                       ),
-                      new Padding(
+                      new Container(
                         padding: const EdgeInsets.all(16.0),
-                        child: new Text(document['body']),
-                      )
+                        child: new Row(
+                          children: <Widget>[
+                            new Expanded(
+                              child: new Text(document['body']),
+                            ),
+                            new GestureDetector(
+                              onTap: () {
+                                _favorite(document.documentID);
+                              },
+                              child: new Row(
+                                children: <Widget>[
+                                  new Icon(
+                                    Icons.favorite,
+                                    color: Colors.red[500],
+                                  ),
+                                  new Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    child: new Text(document['favorite'].toString()),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
