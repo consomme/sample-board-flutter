@@ -31,8 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
           onPressed: () {
             _signIn()
             .then((user) {
-              print("signed in " + user.displayName);
-              Navigator.push(context, new MaterialPageRoute(
+              Navigator.pushReplacement(context, new MaterialPageRoute(
                 builder: (context) => new TimelineScreen()
               ));
             })

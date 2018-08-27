@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:sampleboard/service/firestore_service.dart';
 
 class InputScreen extends StatefulWidget {
   @override
@@ -13,6 +14,9 @@ class InputScreen extends StatefulWidget {
 }
 
 class _InputScreenState extends State<InputScreen> {
+
+  FirestoreService db = new FirestoreService();
+
   final bodyController = new TextEditingController();
 
   File _image;
@@ -22,17 +26,18 @@ class _InputScreenState extends State<InputScreen> {
     int time = DateTime.now().millisecondsSinceEpoch;
     String uuid = Uuid().v4();
 
-    if(_image != null) {
-      StorageUploadTask uploadTask = FirebaseStorage.instance.ref().child('image').child(uuid + '-' + time.toString()).putFile(_image);
+    if (_image != null) {
+      StorageUploadTask uploadTask = FirebaseStorage.instance
+          .ref()
+          .child('image')
+          .child(uuid + '-' + time.toString())
+          .putFile(_image);
       imageUrl = (await uploadTask.future).downloadUrl;
     }
 
-    Firestore.instance.collection('posts').document().setData({
-      'body': body,
-      'image': imageUrl == null ? null : imageUrl.toString(),
-      'order': -time,
-      'favorite': 0
-    }).then((_) => Navigator.pop(context));
+    db
+        .createPost(body, imageUrl == null ? null : imageUrl.toString(), -time)
+        .then((_) => Navigator.pop(context));
   }
 
   Future _getImage() async {
@@ -93,8 +98,7 @@ class _InputScreenState extends State<InputScreen> {
                     'Confirm',
                     style: new TextStyle(fontSize: 16.0),
                   ),
-                  onPressed: () =>
-                      _send(bodyController.text)))
+                  onPressed: () => _send(bodyController.text)))
         ],
       ),
     );

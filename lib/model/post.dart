@@ -33,4 +33,12 @@ class Post {
 
     return map;
   }
+
+  Post.fromMap(Map<String, dynamic> map) {
+    this._id = map['id'];
+    this._body = map['body'];
+    this._image = map['image'];
+    this._order = map['order'];
+    this._favorite = map['favorite'];
+  }
 }
